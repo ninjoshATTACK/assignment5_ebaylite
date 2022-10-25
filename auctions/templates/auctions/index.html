@@ -1,13 +1,39 @@
 {% extends "auctions/layout.html" %}
 
 {% block main %}
-<h2>Active Listings</h2>
+<div class="container">
+    <!-- Content here -->
+  
+    <h2>Active Listings</h2>
 
-<article>
-    <section>Listing 1</section>
+    <ul>
+        
+        {% for listing in listings %}
+            {% if listing.available %}
+        <a href="{% url 'listing' listing.id %}" style="text-decoration: none;">
+            <div class="listing">
 
-    <section>Listing 2</section>
+                <!--{% for n in auction.photos.all %}-->
+                <!--{% endfor %}-->
 
-    <section>Listing 3</section>
-</article>
+                <h3>{{Listing.title}}</h3>
+                    
+                Description: {{Listing.desc}}
+                <li>
+                    Highest Bid: {{Listing.startbid}}
+                </li>
+                <!--<li>
+                    Date of creation: {{Listing.creation_date}}
+                </li>-->
+
+                {% if user.is_authenticated %}
+                <br>
+                    <!--<a href="{% url 'watchlist_add' auction.id %}" class="btn btn-primary">Add to Watch List</a>-->
+                {% endif %}
+            </div>
+        </a>
+            {% endif %}
+        {% endfor %}
+    </ul>   
+</div>
 {% endblock %}
