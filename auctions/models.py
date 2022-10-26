@@ -20,7 +20,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=64)
     desc = models.TextField()
     startbid = models.IntegerField()
-    available = models.BooleanField()
+    available = models.BooleanField(default=True)
     winner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="winner")
     photo = models.ImageField(upload_to='images/', blank=True)
     photo_url = models.URLField()
@@ -42,18 +42,18 @@ class Listing(models.Model):
 
 # model for bids  [NOT CORRECT]
 class Bid(models.Model):
-    price = models.IntegerField()
-    desc = models.CharField(max_length=100)
-    startbid = models.ImageField()
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listing", default=None)
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="buyer", default=None)
+    price = models.IntegerField(default=0)
 
     def __str__(self):
         return f'{self.title}'
 
 # model for comments  [NOT CORRECT]
 class Comment(models.Model):
-    title = models.CharField(max_length=64)
-    desc = models.CharField(max_length=100)
-    startbid = models.ImageField()
+    content = models.CharField(max_length=9999, default='')
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commenter", default=None)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item", default=None)
 
     def __str__(self):
         return f'{self.title}'

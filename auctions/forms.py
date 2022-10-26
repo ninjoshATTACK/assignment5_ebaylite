@@ -6,4 +6,4 @@ class ListingForm(forms.ModelForm):
 
     class Meta:
         model = Listing
-        fields = ('title', 'desc', 'startbid', 'photo', 'listing_category', 'available')
+        fields = ('title', 'desc', 'startbid', 'photo', 'listing_category')

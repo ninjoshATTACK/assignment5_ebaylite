@@ -11,9 +11,11 @@ from django.contrib import messages
 from .models import User, Listing, Category
 from .forms import ListingForm
 
-
+############Index Section (displays active listings)####################
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        'listings': Listing.objects.all()
+    })
 
 ############Create Listing Section####################
 #class ListingForm(forms.Form):         -----Moved this to forms.py
@@ -28,8 +30,9 @@ def create(request):
         message = ""
 
         if listing_form.is_valid():
-            listing_form.seller = request.user  # does not work
-            listing_form.save()
+            new_listing = listing_form.save(commit=False)
+            new_listing.seller = request.user  # does not work
+            new_listing.save()
             messages.success(request, (f'\"{ listing_form.cleaned_data["title"] }\" was successfully added!'))
             return redirect("index")
 
@@ -39,9 +42,6 @@ def create(request):
                 "listing_form": listing_form,
                 "message": message
             })
-
-        new_listing = Listing(id = getLastPk(Listing), title = title, startbid = price, desc = description, listing_category = category_obj, available = True, seller = request.user)
-        new_listing.save()
 
         # TODO: for when I flesh out bidding in models.py
 
@@ -54,6 +54,10 @@ def create(request):
         "listing_form": listing_form,
         'listings': listings
     })
+
+############Listings Section####################
+def listing(request):
+    pass
 
 ############Login/Logout Section####################
 def login_view(request):

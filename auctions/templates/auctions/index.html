@@ -10,28 +10,32 @@
         
         {% for listing in listings %}
             {% if listing.available %}
-        <a href="{% url 'listing' listing.id %}" style="text-decoration: none;">
-            <div class="listing">
+                <a href="{% url 'listing' listing.id %}" style="text-decoration: none;">
+                    <div class="listing">
 
-                <!--{% for n in auction.photos.all %}-->
-                <!--{% endfor %}-->
+                        <!--{% for n in auction.photos.all %}-->
+                        <!--{% endfor %}-->
 
-                <h3>{{Listing.title}}</h3>
-                    
-                Description: {{Listing.desc}}
-                <li>
-                    Highest Bid: {{Listing.startbid}}
-                </li>
-                <!--<li>
-                    Date of creation: {{Listing.creation_date}}
-                </li>-->
+                        <h3>{{listing.title}}</h3>
+                        {% if listing.photo != null %}
+                            <img class="image" src="{{listing.photo}}">
+                        {% endif %}    
+                        <li>
+                            Description: {{listing.desc}}
+                        </li>
+                        <li>
+                            Highest Bid: {{listing.startbid}}
+                        </li>
+                        <!--<li>
+                            Date of creation: {{Listing.creation_date}}
+                        </li>-->
 
-                {% if user.is_authenticated %}
-                <br>
-                    <!--<a href="{% url 'watchlist_add' auction.id %}" class="btn btn-primary">Add to Watch List</a>-->
-                {% endif %}
-            </div>
-        </a>
+                        {% if user.is_authenticated %}
+                        <br>
+                            <!--Add stuff about watchlist later-->
+                        {% endif %}
+                    </div>
+                </a>
             {% endif %}
         {% endfor %}
     </ul>   
