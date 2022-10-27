@@ -8,8 +8,8 @@ from django import forms
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 
-from .models import User, Listing, Category
-from .forms import ListingForm
+from .models import User, Listing, Category, Comment, Bid
+from .forms import ListingForm, BidForm
 
 ############Index Section (displays active listings)####################
 def index(request):
@@ -17,7 +17,7 @@ def index(request):
         'listings': Listing.objects.all()
     })
 
-############Create Listing Section####################
+######################Create Listing Section####################
 #class ListingForm(forms.Form):         -----Moved this to forms.py
     #title = forms.CharField(label = "title")
     #price = forms.CharField(label = "price")
@@ -31,7 +31,7 @@ def create(request):
 
         if listing_form.is_valid():
             new_listing = listing_form.save(commit=False)
-            new_listing.seller = request.user  # does not work
+            new_listing.seller = request.user  # works now
             new_listing.save()
             messages.success(request, (f'\"{ listing_form.cleaned_data["title"] }\" was successfully added!'))
             return redirect("index")
@@ -55,9 +55,45 @@ def create(request):
         'listings': listings
     })
 
-############Listings Section####################
-def listing(request):
-    pass
+################Listings Section####################
+def listing(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+
+    return render(request, "auctions/listing.html", {
+        'listing': listing
+    })
+
+#################Bidding Section####################
+def bid(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    message = ""
+
+    if request.method == "POST":
+        bid_form = BidForm(request.POST)
+
+        if bid_form.is_valid():
+            new_bid = bid_form.save(commit=False)
+            if (new_bid.price > listing.startbid):
+                new_bid.buyer = request.user
+                new_bid.listing = listing
+                new_bid.save()
+                listing.startbid = new_bid.price
+                listing.save()
+                return redirect('listing', listing_id=listing_id)
+            else:
+                message = "Something went wrong with the bid (your bid must be higher than current price)"
+                return render(request, "auctions/bid.html", {
+                    "bid_form": bid_form,
+                    "message": message,
+                })
+
+    else:
+        bid_form = BidForm()
+
+    return render(request, "auctions/bid.html", {
+        'bid_form': bid_form,
+        "listing": listing,
+    })
 
 ############Login/Logout Section####################
 def login_view(request):

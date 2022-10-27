@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block main %}
+    <h2>{{listing.title}}</h2>
+    
+
+    <article>
+        <section>
+            <a href="{% url 'bid' listing.id %}" style="background-color: rgb(161, 197, 161);" >Place Bid</a> <br>
+            {% if listing.photo != null %}
+                <img class="image" src="{{listing.photo_url}}" width="150px" height="auto">
+            {% endif %}    
+            <li>
+                Description: {{listing.desc}}
+            </li>
+            <li>
+                Seller: {{listing.seller}}
+            </li>
+            <li>
+                Highest Bid: ${{listing.startbid}}
+            </li>
+            <!--<li>
+                Date of creation: {{Listing.creation_date}}
+            </li>-->
+
+            {% if user.is_authenticated %}
+            <br>
+                <!--Add stuff about watchlist later-->
+            {% endif %}
+                
+        </section>
+    </article>
+    
+{% endblock %}
