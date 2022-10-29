@@ -7,7 +7,7 @@
 
     <article>
         <section>
-            <a href="{% url 'bid' listing.id %}" style="background-color: rgb(161, 197, 161);" >Place Bid</a> <br>
+            
             {% if listing.photo != null %}
                 <img class="image" src="{{listing.photo_url}}" width="150px" height="auto">
             {% endif %}    
@@ -18,7 +18,10 @@
                 Seller: {{listing.seller}}
             </li>
             <li>
-                Highest Bid: ${{listing.startbid}}
+                Highest Bid: ${{listing.startbid}} <br>
+                {% if user.is_authenticated %}
+                <a href="{% url 'bid' listing.id %}" style="background-color: rgb(161, 197, 161);" >Place Bid</a>
+                {% endif %}
             </li>
             <!--<li>
                 Date of creation: {{Listing.creation_date}}
@@ -29,6 +32,29 @@
                 <!--Add stuff about watchlist later-->
             {% endif %}
                 
+        </section>
+
+        <!--Add Comment NOT WORKING RN-->
+        {% if user.is_authenticated %}
+            <section>
+                <form action="{% url 'comment' listing.id %}" method="post">
+                    {% csrf_token %}
+                    {{comment_form}}
+                    <br>
+                    <button type="submit">Submit</button>
+                </form>
+            </section>
+        {% endif %}
+
+        <!--Comments Section-->
+        <section>
+            <h3>Comments</h3>
+            {% for comment in listing.comments.all %}
+                <li>
+                    {{comment.commenter}} says, <br>
+                    {{comment.content}}
+                </li>
+            {% endfor %}
         </section>
     </article>
     

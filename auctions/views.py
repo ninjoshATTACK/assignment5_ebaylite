@@ -9,7 +9,7 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 
 from .models import User, Listing, Category, Comment, Bid
-from .forms import ListingForm, BidForm
+from .forms import ListingForm, BidForm, CommentForm
 
 ############Index Section (displays active listings)####################
 def index(request):
@@ -61,6 +61,27 @@ def listing(request, listing_id):
 
     return render(request, "auctions/listing.html", {
         'listing': listing
+    })
+
+################Comments####################
+def comment(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+
+    if request.method == "POST":
+        comment_form = CommentForm(request.POST, request.FILES)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.commenter = request.user
+            new_comment.listing = listing
+            new_comment.save()
+            return redirect('listing', listing_id=listing_id)
+        else:
+            pass
+    else:
+        comment_form = CommentForm()
+    return render(request, "auctions/listing.html", {
+        'comment_form': comment_form,
+        'listing': listing,
     })
 
 #################Bidding Section####################
