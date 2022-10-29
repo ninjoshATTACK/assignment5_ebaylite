@@ -24,7 +24,7 @@ class Listing(models.Model):
     winner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="winner")
     photo = models.ImageField(upload_to='images/', blank=True)
     photo_url = models.URLField()
-    listing_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="categories")
+    listing_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="category")
     seller = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="seller")
 
     # got this from the professor's movies example
@@ -52,8 +52,8 @@ class Bid(models.Model):
 # model for comments  [NOT CORRECT]
 class Comment(models.Model):
     content = models.CharField(max_length=9999, default='')
-    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commenter", default=None)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item", default=None)
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments", default=None)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments", default=None)
 
     def __str__(self):
         return f'{self.title}'

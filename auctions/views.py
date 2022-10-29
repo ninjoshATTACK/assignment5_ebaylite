@@ -58,9 +58,9 @@ def create(request):
 ################Listings Section####################
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
-
     return render(request, "auctions/listing.html", {
-        'listing': listing
+        'listing': listing,
+        'comment_form': CommentForm(),
     })
 
 ################Comments####################
@@ -114,6 +114,21 @@ def bid(request, listing_id):
     return render(request, "auctions/bid.html", {
         'bid_form': bid_form,
         "listing": listing,
+    })
+
+############Categories Section####################
+def categories(request):
+    return render(request, "auctions/categories.html", {
+        'categories': Category.objects.all()
+    })
+
+def category(request, category_id):
+    category = Category.objects.get(pk=category_id)
+    listings = Listing.objects.filter(listing_category = category, available=True)
+
+    return render(request, "auctions/category.html", {
+        'listings': listings,
+        #'message': "{category.name} Listings"
     })
 
 ############Login/Logout Section####################
