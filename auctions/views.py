@@ -58,9 +58,9 @@ def create(request):
 ################Listings Section####################
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
-
     return render(request, "auctions/listing.html", {
-        'listing': listing
+        'listing': listing, 
+        'comment_form': CommentForm(),
     })
 
 ################Comments####################
@@ -75,6 +75,8 @@ def comment(request, listing_id):
             new_comment.listing = listing
             new_comment.save()
             return redirect('listing', listing_id=listing_id)
+    #PRETTY SURE THAT YOU'll NEVER GET BEYOND THIS LINE
+
         else:
             pass
     else:
