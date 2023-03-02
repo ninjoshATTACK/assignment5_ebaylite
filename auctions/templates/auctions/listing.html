@@ -2,7 +2,12 @@
 {% load static %}
 
 {% block main %}
-    <h2>{{listing.title}}</h2>
+    <h2>
+        {{listing.title}}
+        {% if not listing.active %}
+            <p style="color:red;">Bidding Closed</p>
+        {% endif %}
+    </h2>
     
 
     <article>
